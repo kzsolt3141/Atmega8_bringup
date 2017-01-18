@@ -14,6 +14,7 @@
 //------------------------------------------------
 //               HEADERS
 //------------------------------------------------
+#include "defines.h"
 #include <avr/io.h>
 #include <avr/common.h>
 #include <avr/interrupt.h>
