@@ -16,7 +16,6 @@
 
 // own headers
 #include "USART_tools.h"
-#include "GPIO_tools.h"
 
 //------------------------------------------------
 //               MAIN
@@ -27,8 +26,7 @@ int main(void)
 char i = 0;
 // device initializations
 	USARTInit(); 
-	LEDInit();
-	LEDTest();
+
 // wait after the initialization is done
 // it takes time to devices to get working...
     printf("Init Done :)\n\r");
