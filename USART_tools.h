@@ -3,9 +3,6 @@
  *
  * Created: 12/21/2016 10:47:01 PM
  *  Author: Zsolt
- * -------------------------------
- * Do NOT modify this code!
- *--------------------------------
  */ 
 
 
@@ -20,7 +17,6 @@
 #include <avr/io.h>
 #include <avr/common.h>
 #include <avr/interrupt.h>
-#include <util/delay.h>
 
 //------------------------------------------------
 //               DEFINES

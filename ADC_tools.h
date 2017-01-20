@@ -1,24 +1,21 @@
 /*
- * TWI_tools.h
+ * ADC_tools.h
  *
- * Created: 12/22/2016 6:42:20 PM
+ * Created: 1/18/2017 11:43:26 PM
  *  Author: Zsolt
- *-------------------------------
- * Do NOT modify this code!
- *-------------------------------
  */ 
 
 
-#ifndef TWI_TOOLS_H_
-#define TWI_TOOLS_H_
+#ifndef ADC_TOOLS_H_
+#define ADC_TOOLS_H_
+
 //------------------------------------------------
 //               HEADERS
 //------------------------------------------------
-// TWI definitions, AVR Studio libraries
-#include "defines.h"
+// AVR studio headers
 #include <avr/io.h>
 #include <avr/common.h>
-#include <util/twi.h>
+#include <avr/interrupt.h>
 
 //------------------------------------------------
 //               DEFINES
@@ -27,12 +24,13 @@
 //------------------------------------------------
 //               FUNCTIONS
 //------------------------------------------------
-void TWIInit();
-void TWIStart();
-void TWIStop();
-void TWIWrite(uint8_t);
-uint8_t TWIReadACK();
-uint8_t TWIReadNACK();
-uint8_t TWIGetStatus();
+void ADCInit();
+uint16_t ADCRead();
 
-#endif /* TWI_TOOLS_H_ */
+//------------------------------------------------
+//               VARIABLES
+//------------------------------------------------
+int16_t rawADC;
+
+
+#endif /* ADC_TOOLS_H_ */
