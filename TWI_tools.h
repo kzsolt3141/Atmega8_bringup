@@ -27,12 +27,13 @@
 //------------------------------------------------
 //               FUNCTIONS
 //------------------------------------------------
-void TWIInit();
-void TWIStart();
-void TWIStop();
-void TWIWrite(uint8_t);
-uint8_t TWIReadACK();
-uint8_t TWIReadNACK();
-uint8_t TWIGetStatus();
-
+extern void TWIInit();
+extern void TWIStart();
+extern void TWIStop();
+extern void TWIWrite(uint8_t);
+extern uint8_t TWIReadACK();
+extern uint8_t TWIReadNACK();
+extern uint8_t TWIGetStatus();
+extern void TWIWriteReg (uint8_t, uint8_t, uint8_t);
+uint8_t TWIReadReg (uint8_t, uint8_t);
 #endif /* TWI_TOOLS_H_ */

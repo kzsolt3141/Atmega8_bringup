@@ -24,13 +24,13 @@
 //------------------------------------------------
 //               FUNCTIONS
 //------------------------------------------------
-void ADCInit();
-uint16_t ADCRead();
+extern void ADCInit();
+extern uint16_t ADCRead();
 
 //------------------------------------------------
 //               VARIABLES
 //------------------------------------------------
-int16_t rawADC;
+extern int16_t rawADC;
 
 
 #endif /* ADC_TOOLS_H_ */

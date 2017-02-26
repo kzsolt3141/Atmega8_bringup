@@ -10,6 +10,11 @@
 #include "USART_tools.h"
 
 //------------------------------------------------
+//               EXTERN REDEFINITIONS
+//------------------------------------------------
+uint8_t USART_ReadByte = 0;
+
+//------------------------------------------------
 //               FUNCTIONS
 //------------------------------------------------
 
@@ -25,7 +30,7 @@
     UCSRC |= (1 << UCSZ0) | (1 << UCSZ1); // Use 8-bit character sizes
     UBRRH = BAUD_PRESCALE >> 8;           // Load upper 8-bits of the baud rate value into the high byte of the UBRR register
     UBRRL = BAUD_PRESCALE;                // Load lower 8-bits of the baud rate value into the low byte of the UBRR register
-	stdout = &mystdout;                   //Required for printf init
+	stdout = &mystdout;                   // Required for printf initialization
 	sei();                                // enable interrupts
 }
 

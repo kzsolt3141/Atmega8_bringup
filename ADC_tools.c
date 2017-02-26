@@ -10,6 +10,11 @@
 #include "ADC_tools.h"
 
 //------------------------------------------------
+//               EXTERN REDEFINITIONS
+//------------------------------------------------
+int16_t rawADC = 0;
+
+//------------------------------------------------
 //               FUNCTIONS
 //------------------------------------------------
 
@@ -43,6 +48,8 @@ uint16_t ADCRead()
 //                ISR(ADC_vect)
 //------------------------------------------------
 // interrupt from ADC conversion complete
+// you can use filters in this ISR 
+// but it will slow down the process
 ISR(ADC_vect)
 {
 	rawADC = ADC;        // save ADC value in global variable

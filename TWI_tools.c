@@ -113,3 +113,73 @@ uint8_t TWIGetStatus(void)
     status = TWSR & 0xF8; // mask lower 3 bits of the status register
     return status;        // return the masked value
 }
+
+
+
+uint8_t TWIReadReg (uint8_t slave_addr ,uint8_t internal_addr)
+{
+	uint8_t data, status;
+	TWIStart();									  // send S (Start bit)
+	if (TWIGetStatus() != 0x08)					  // verify if S was sent
+		printf("S bit error\n\r");
+	TWIWrite(slave_addr << 1);			          // write to the slave address with W (write) condition
+	status = TWIGetStatus();					  // get the status of the transfer
+	if (status != 0x18)							  // verify if slave responds to his address
+	{
+		printf("%x SLAVE at W lost\n\r", status);
+	}		
+	TWIWrite(internal_addr);					  // send to slave the internal register address which will be read
+	status = TWIGetStatus();					  // get the status of the transfer
+	if (status != 0x28)							  // verify if the slave responds to the written address with ACK
+	{
+		printf("%x internal addr lost\n\r", status);
+	}		
+	TWIStart();                                   // send a repeated S (start) condition
+	status = TWIGetStatus();					  // get the status of the transfer
+	if (status != 0x10)							  // verify if the slave responds to the repeated start condition
+	{
+		printf("%x repeated start failed\n\r", status);
+	}
+	TWIWrite((slave_addr << 1) | 1);	          // write to the slave address with R (read) condition
+	status = TWIGetStatus();					  // get the status of the transfer
+	if (status != 0x40)							  // verify if slave responds to his address
+	{
+		printf("%x Slave at R lost\n\r", status);
+	}
+	data = TWIReadNACK();						  // read out data from with NACK (only one data will be read out, no need for ACK)
+	status = TWIGetStatus();					  // get the status of the transfer
+	if (status != 0x58)							  // verify if transfer was OK
+	{
+		printf("%x data with NACK lost\n\r", status);
+	}
+	TWIStop();                                   // send P (stop) bit
+	return data;                                 // return the read out data
+
+}
+
+void TWIWriteReg (uint8_t slave_addr, uint8_t internal_addr,uint8_t data)
+{
+	uint8_t status;
+	TWIStart();                               // send S (Start bit)
+	if (TWIGetStatus() != 0x08)               // verify if S was sent
+		printf("S bit error\n\r");
+	TWIWrite(slave_addr << 1);                // write to the slave address with W (write) condition 
+	status = TWIGetStatus();                  // get the status of the transfer
+	if (status != 0x18)                       // verify if slave responds to his address
+	{
+		printf("%x SLAVE lost\n\r", status);
+	}		
+	TWIWrite(internal_addr);                  // send to slave the internal register address which will be written
+	status = TWIGetStatus();                  // get the status of the transfer
+	if (status != 0x28)						  // verify if the slave responds to the written address with ACK
+	{
+		printf("%x internal addr found\n\r", status);
+	}		
+	TWIWrite(data);                           // write the internal register with the data
+	status = TWIGetStatus();				  // get the status of the transfer
+	if (status != 0x28)						  // verify if the slave accepted writted data with ACK
+	{
+		printf("%x Data not written\n\r", status);
+	}	
+	TWIStop();                                // send P (stop) bit
+}

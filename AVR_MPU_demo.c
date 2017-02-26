@@ -15,8 +15,8 @@
 // own headers
 #include "USART_tools.h"
 #include "ADC_tools.h"
-#include "Kalman_filter.h"
-#include "FIR_tools.h"
+#include "MPU9250.h"
+#include "BMP280.h"
 
 //------------------------------------------------
 //               MAIN
@@ -27,17 +27,24 @@ int main(void)
 
 // device initializations
 	USARTInit(); 
-	kalman_init(&ks, 0.1, 5, 50, 51);
 	ADCInit();
+	MPU9250Init();
+	
 
 // wait after the initialization is done
 // it takes time to devices to get working...
     printf("Init Done... :)\n\r");
 	_delay_ms(200);
-
+	printf("%x\n\r",TWIReadReg(AK8963_DEFAULT_ADDRESS, AK8963_RA_WIA));
+	printf("%x\n\r",TWIReadReg(BMP280_I2C_ADDRESS, BMP280_REGISTER_CHIPID));
 // infinite loop
     while(1)
     {
-		printf("%d\n\r",ADCRead());
+		/*
+		printf("%d %d %d %x\n\r",TWIReadReg(MPU9250_I2C_ADDRESS, MPU9250_ACCEL_XOUT_H), 
+				TWIReadReg(MPU9250_I2C_ADDRESS, MPU9250_ACCEL_YOUT_H), 
+				TWIReadReg(MPU9250_I2C_ADDRESS, MPU9250_ACCEL_ZOUT_H),
+				TWIReadReg(MPU9250_I2C_ADDRESS, AK8963_RA_WIA));
+				*/
     }
 }

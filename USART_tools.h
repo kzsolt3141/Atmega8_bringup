@@ -33,14 +33,14 @@
 //------------------------------------------------
 //               FUNCTIONS
 //------------------------------------------------
-void USARTInit();
-void USART_char_send(char *c);
-int USART_printf(char c, FILE *stream);
+extern void USARTInit();
+extern void USART_char_send(char *c);
+extern int USART_printf(char c, FILE *stream);
 ISR(USART_RXC_vect);
 
 //------------------------------------------------
 //               VARIABLES
 //------------------------------------------------
-uint8_t USART_ReadByte;
+extern uint8_t USART_ReadByte;
 static FILE mystdout = FDEV_SETUP_STREAM(USART_printf, NULL, _FDEV_SETUP_WRITE);
 #endif /* USART_TOOLS_H_ */

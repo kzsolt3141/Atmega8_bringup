@@ -34,7 +34,6 @@ void kalman_update(kalman_state* , int16_t*);
 //------------------------------------------------
 //               VARIABLES
 //------------------------------------------------
-kalman_state ks;
 
 
 #endif /* KALMAN_FILTER_H_ */
