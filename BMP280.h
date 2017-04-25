@@ -5,6 +5,8 @@
  *  Author: Zsolt
  */ 
 
+#include "defines.h"
+#include <stdio.h>
 
 #ifndef BMP280_H_
 #define BMP280_H_
@@ -33,6 +35,40 @@
 #define BMP280_REGISTER_PRESSUREDATA       0xF7
 #define BMP280_REGISTER_TEMPDATA           0xFA
 
+#define BMP280_CALIB_SIZE 24
 
+
+typedef struct
+{
+	uint16_t dig_T1;
+	int16_t dig_T2;
+	int16_t dig_T3;
+	uint16_t dig_P1;
+	int16_t dig_P2;
+	int16_t dig_P3;
+	int16_t dig_P4;
+	int16_t dig_P5;
+	int16_t dig_P6;
+	int16_t dig_P7;
+	int16_t dig_P8;
+	int16_t dig_P9;
+} BMP280CalibData;
+
+typedef struct  
+{
+	uint8_t baro[3];
+	uint8_t temp[3];
+} BMP280RawData;
+
+typedef struct  
+{
+	int32_t baro;
+	uint32_t temp;
+} BMP280FinalData;
+
+extern void BMP280Init();
+extern void BMP280_getData(BMP280FinalData * final);
+
+extern BMP280CalibData calib;
 
 #endif /* BMP280_H_ */

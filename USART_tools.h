@@ -25,7 +25,7 @@
 //define USART baud rate, this value will be identical with the
 // baud rate of the COM port in windows with which the Arduino 
 // communicates with PC (see Device Manager!!)
-#define USART_BAUDRATE 4800 
+#define USART_BAUDRATE 38400
 //calculate from Baud rate the prescaler value for the microcontroller
 // baud rate counter
 #define BAUD_PRESCALE (((F_CPU/(USART_BAUDRATE*16UL)))-1) 

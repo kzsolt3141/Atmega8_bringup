@@ -12,6 +12,7 @@
 #include "USART_tools.h"
 #include "TWI_tools.h"
 #include <util/delay.h>
+#include "BMP280.h"
 
 #ifndef MPU9250_H_
 #define MPU9250_H_
@@ -372,13 +373,48 @@
 
 #define AK8963_I2CDIS_BIT         0
 
-
 //Magnetometer register masks
 #define MPU9250_WIA_MASK 0x48
+
+// custom definitions
+#define GYRO_SNS 65.5
+#define ACCE_SNS 8192
+
+
+typedef struct  
+{
+	uint8_t accx[2];
+	uint8_t accy[2];
+	uint8_t accz[2];
+	
+	uint8_t tmp[2];
+	
+	uint8_t gyrox[2];
+	uint8_t gyroy[2];
+	uint8_t gyroz[2];
+	
+	uint8_t magx[2];
+	uint8_t magy[2];
+	uint8_t magz[2];
+	uint8_t mag_status;
+	
+}MPU9250RawData;
+
+typedef struct  
+{
+	int16_t acc[3];
+	int16_t tmp;
+	int16_t gyro[3];
+	int16_t mag[3];
+	uint8_t mag_status;
+}MPU9250Data;
+
 
 //------------------------------------------------
 //               FUNCTIONS
 //------------------------------------------------
 extern void MPU9250Init();  // write MPU configuration registers
+extern void MPU9250Calib(); // calibrate MEMS
+extern void MPU9250_getData(MPU9250Data * data);
 
 #endif /* MPU9250_H_ */

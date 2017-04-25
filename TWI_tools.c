@@ -24,9 +24,8 @@
 void TWIInit(void)
 {
     //set SCL to F_CPU/(16+2*TWBR*prescaler)
-    TWSR &= ~((1 << TWPS1) | 
-	          (1 << TWPS0));  // set prescaler to 1
-    TWBR  =   0x1;            // set bitrate to  12
+    TWSR &=  ~((1 << TWPS1) | (1 << TWPS0));  // set prescaler to 1
+    TWBR  =   0x02;            // set bitrate to  12
     TWCR |=   (1 << TWEN);    // enable TWI
 }
 
@@ -115,10 +114,9 @@ uint8_t TWIGetStatus(void)
 }
 
 
-
-uint8_t TWIReadReg (uint8_t slave_addr ,uint8_t internal_addr)
+void TWIReadRegBurst (uint8_t* buffer,const uint8_t slave_addr ,const uint8_t internal_addr, const uint8_t size)
 {
-	uint8_t data, status;
+	uint8_t status, i;
 	TWIStart();									  // send S (Start bit)
 	if (TWIGetStatus() != 0x08)					  // verify if S was sent
 		printf("S bit error\n\r");
@@ -146,40 +144,79 @@ uint8_t TWIReadReg (uint8_t slave_addr ,uint8_t internal_addr)
 	{
 		printf("%x Slave at R lost\n\r", status);
 	}
-	data = TWIReadNACK();						  // read out data from with NACK (only one data will be read out, no need for ACK)
+	for(i = 0; i < (size -1); i++)
+	{
+		*(buffer+i) = TWIReadACK();						  // read out data from with ACK (only one data will be read out, no need for ACK)
+		status = TWIGetStatus();					  // get the status of the transfer
+		if (status != 0x50)							  // verify if transfer was OK
+		{
+			printf("%x data with ACK lost\n\r", status);
+		}
+	}
+	
+	*(buffer+i) = TWIReadNACK();
 	status = TWIGetStatus();					  // get the status of the transfer
 	if (status != 0x58)							  // verify if transfer was OK
 	{
 		printf("%x data with NACK lost\n\r", status);
 	}
 	TWIStop();                                   // send P (stop) bit
-	return data;                                 // return the read out data
-
 }
 
-void TWIWriteReg (uint8_t slave_addr, uint8_t internal_addr,uint8_t data)
+void TWIWriteReg (const uint8_t slave_addr,const uint8_t internal_addr, const uint8_t data)
 {
 	uint8_t status;
 	TWIStart();                               // send S (Start bit)
-	if (TWIGetStatus() != 0x08)               // verify if S was sent
-		printf("S bit error\n\r");
+	status = TWIGetStatus(); 
+	if (status != 0x08)               // verify if S was sent
+	{
+		printf("0x%x S bit error(W)\n\r", status);
+	}	
 	TWIWrite(slave_addr << 1);                // write to the slave address with W (write) condition 
 	status = TWIGetStatus();                  // get the status of the transfer
 	if (status != 0x18)                       // verify if slave responds to his address
 	{
-		printf("%x SLAVE lost\n\r", status);
+		printf("0x%x SLAVE lost(W)\n\r", status);
 	}		
 	TWIWrite(internal_addr);                  // send to slave the internal register address which will be written
 	status = TWIGetStatus();                  // get the status of the transfer
 	if (status != 0x28)						  // verify if the slave responds to the written address with ACK
 	{
-		printf("%x internal addr found\n\r", status);
+		printf("0x%x internal addr found(W)\n\r", status);
 	}		
 	TWIWrite(data);                           // write the internal register with the data
 	status = TWIGetStatus();				  // get the status of the transfer
 	if (status != 0x28)						  // verify if the slave accepted writted data with ACK
 	{
-		printf("%x Data not written\n\r", status);
+		printf("0x%x Data not written(W)\n\r", status);
 	}	
 	TWIStop();                                // send P (stop) bit
+}
+
+void TWISniff ()
+{
+	uint8_t status, i;
+	
+	for (i=0; i<0xFF; i++)
+	{
+		TWIStart();                               // send S (Start bit)
+		status = TWIGetStatus(); 
+		if (status != 0x08)               // verify if S was sent
+		{
+			printf("0x%x S bit error(W)\n\r", status);
+		}	
+		
+		TWIWrite(i << 1);                // write to the slave address with W (write) condition 
+		status = TWIGetStatus();                  // get the status of the transfer
+		if (status != 0x18)                       // verify if slave responds to his address
+		{
+			printf("0x%x 0x%x SLAVE lost(W)\n\r", status, i);
+		}
+		else
+		{
+			printf("0x%x 0x%x YESS\n\r", status, i);
+		}	
+		
+		TWIStop(); 
+	}		 	
 }
