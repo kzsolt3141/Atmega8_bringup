@@ -11,6 +11,7 @@ void TIMER0Init()
 {
 	cli();
 	SREG |= 1 << SREG_I;   // enable interrupt
+	TCNT0 = TIMER0_PRELOAD;
 	TCCR0 |= ((1 << CS02) | 
 	          (0 << CS01) |
 			  (1 << CS00)); // set prescaler to 1024
@@ -18,9 +19,5 @@ void TIMER0Init()
 	sei();
 }
 
-ISR (TIMER0_OVF_vect)
-{
-	PORTB ^= 0x02;
-}
 
 

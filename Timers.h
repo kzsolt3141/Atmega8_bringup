@@ -11,9 +11,9 @@
 
 #include "avr/io.h"
 #include "avr/interrupt.h"
+#include "defines.h"
 
 extern void TIMER0Init();
-ISR (TIMER0_OVF_vect);
 
 
 #endif /* TIMERS_H_ */

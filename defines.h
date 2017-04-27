@@ -14,5 +14,7 @@
 //------------------------------------------------
 #define F_CPU 8000000UL
 #define R2D 57.295779
+#define TIMER0_PRELOAD 225
+#define DT 0.0039682
 
 #endif /* DEFINES_H_ */
